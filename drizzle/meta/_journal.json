@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1722759756084,
+      "tag": "0000_modern_eternity",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1722760286041,
+      "tag": "0001_fearless_ma_gnuci",
+      "breakpoints": true
+    }
+  ]
+}
