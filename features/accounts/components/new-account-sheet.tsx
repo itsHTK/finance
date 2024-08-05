@@ -1,7 +1,7 @@
 import React from 'react';
 import { insertAccountSchema } from '@/db/schema';
+import { useCreateAccount } from '@/features/accounts/api/use-create-account';
 import AccountsForm from '@/features/accounts/components/accounts-form';
-import { useCreateAccount } from '@/features/accounts/hooks/use-create-account';
 import { useNewAccount } from '@/features/accounts/hooks/use-new-account';
 import { z } from 'zod';
 
