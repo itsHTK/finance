@@ -34,22 +34,18 @@ const NewAccountSheet = () => {
 
    return (
       <Sheet open={isOpen} onOpenChange={onClose}>
-         <SheetContent>
-            <SheetContent className="space-y-4">
-               <SheetHeader>
-                  <SheetTitle>New Account</SheetTitle>
-                  <SheetDescription>
-                     Create a new account to track your transactions.
-                  </SheetDescription>
-               </SheetHeader>
-               <AccountsForm
-                  onSubmit={onSubmit}
-                  disabled={mutation.isPending}
-                  defaultValues={{
-                     name: '',
-                  }}
-               />
-            </SheetContent>
+         <SheetContent className="space-y-4">
+            <SheetHeader>
+               <SheetTitle>New Account</SheetTitle>
+               <SheetDescription>Create a new account to track your transactions.</SheetDescription>
+            </SheetHeader>
+            <AccountsForm
+               onSubmit={onSubmit}
+               disabled={mutation.isPending}
+               defaultValues={{
+                  name: '',
+               }}
+            />
          </SheetContent>
       </Sheet>
    );
