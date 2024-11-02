@@ -25,10 +25,10 @@ export default function RootLayout({
    return (
       <ClerkProvider afterSignOutUrl="/">
          <html lang="en">
-            <body className={inter.className}>
+            <body className={`${inter.className} antialiased`}>
                <QueryProvider>
                   <SheetProvider />
-                  <Toaster />
+                  <Toaster richColors className={inter.className} />
                   {children}
                </QueryProvider>
             </body>

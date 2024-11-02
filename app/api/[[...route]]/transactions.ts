@@ -207,7 +207,7 @@ const app = new Hono()
       ),
       zValidator(
          'json',
-         insertTransactionSchema.pick({
+         insertTransactionSchema.omit({
             id: true,
          })
       ),

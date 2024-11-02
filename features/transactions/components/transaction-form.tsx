@@ -173,9 +173,15 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
                {!!id ? 'Save Changes' : 'Create transaction'}
             </Button>
             {!!id && (
-               <Button type="button" disabled={disabled} className="w-full" variant="outline">
+               <Button
+                  type="button"
+                  disabled={disabled}
+                  onClick={handleDelete}
+                  className="w-full"
+                  variant="outline"
+               >
                   <Trash className="size-4 mr-2" />
-                  Delete Transaction
+                  Delete transaction
                </Button>
             )}
          </form>

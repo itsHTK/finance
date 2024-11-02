@@ -1,18 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
+import * as React from 'react';
 import {
    ColumnDef,
+   ColumnFiltersState,
    flexRender,
    getCoreRowModel,
+   getFilteredRowModel,
    getPaginationRowModel,
+   getSortedRowModel,
    Row,
+   SortingState,
    useReactTable,
 } from '@tanstack/react-table';
 import { Trash } from 'lucide-react';
 
 import { useConfirm } from '@/hooks/use-confirm';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
    Table,
    TableBody,
@@ -25,6 +30,7 @@ import {
 interface DataTableProps<TData, TValue> {
    columns: ColumnDef<TData, TValue>[];
    data: TData[];
+   filterKey: string;
    onDelete: (rows: Row<TData>[]) => void;
    disabled?: boolean;
 }
@@ -32,14 +38,17 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
    columns,
    data,
+   filterKey,
    onDelete,
    disabled,
 }: DataTableProps<TData, TValue>) {
    const [ConfirmDialog, confirm] = useConfirm(
       'Are you sure?',
-      'Your are about to perform a bulk delete.'
+      'You are about to perform a bulk delete.'
    );
 
+   const [sorting, setSorting] = React.useState<SortingState>([]);
+   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
    const [rowSelection, setRowSelection] = React.useState({});
 
    const table = useReactTable({
@@ -47,8 +56,14 @@ export function DataTable<TData, TValue>({
       columns,
       getCoreRowModel: getCoreRowModel(),
       getPaginationRowModel: getPaginationRowModel(),
+      onSortingChange: setSorting,
+      getSortedRowModel: getSortedRowModel(),
+      onColumnFiltersChange: setColumnFilters,
+      getFilteredRowModel: getFilteredRowModel(),
       onRowSelectionChange: setRowSelection,
       state: {
+         sorting,
+         columnFilters,
          rowSelection,
       },
    });
@@ -57,6 +72,12 @@ export function DataTable<TData, TValue>({
       <div>
          <ConfirmDialog />
          <div className="flex items-center py-4">
+            <Input
+               placeholder={`Filter ${filterKey}...`}
+               value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ''}
+               onChange={event => table.getColumn(filterKey)?.setFilterValue(event.target.value)}
+               className="max-w-sm"
+            />
             {table.getFilteredSelectedRowModel().rows.length > 0 && (
                <Button
                   disabled={disabled}
@@ -65,6 +86,7 @@ export function DataTable<TData, TValue>({
                   className="ml-auto font-normal text-xs"
                   onClick={async () => {
                      const ok = await confirm();
+
                      if (ok) {
                         onDelete(table.getFilteredSelectedRowModel().rows);
                         table.resetRowSelection();
