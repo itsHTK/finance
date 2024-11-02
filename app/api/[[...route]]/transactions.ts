@@ -26,7 +26,7 @@ const app = new Hono()
          const { from, to, accountId } = c.req.valid('query');
 
          if (!auth?.userId) {
-            return c.json({ error: 'unauthorized' }, 401);
+            return c.json({ error: 'Unauthorized' }, 401);
          }
 
          const defaultTo = new Date();
@@ -114,7 +114,7 @@ const app = new Hono()
          const values = c.req.valid('json');
 
          if (!auth?.userId) {
-            return c.json({ error: 'unauthorized' }, 401);
+            return c.json({ error: 'Unauthorized' }, 401);
          }
 
          const [data] = await db
@@ -123,6 +123,38 @@ const app = new Hono()
                id: createId(),
                ...values,
             })
+            .returning();
+
+         return c.json({ data });
+      }
+   )
+   .post(
+      '/bulk-create',
+      clerkMiddleware(),
+      zValidator(
+         'json',
+         z.array(
+            insertTransactionSchema.omit({
+               id: true,
+            })
+         )
+      ),
+      async c => {
+         const auth = getAuth(c);
+         const values = c.req.valid('json');
+
+         if (!auth?.userId) {
+            return c.json({ error: 'Unauthorized' }, 401);
+         }
+
+         const data = await db
+            .insert(transactions)
+            .values(
+               values.map(value => ({
+                  id: createId(),
+                  ...value,
+               }))
+            )
             .returning();
 
          return c.json({ data });
